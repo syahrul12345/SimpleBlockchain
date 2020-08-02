@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/big"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -33,6 +34,7 @@ func CreateBlock(data string, prevhash string) *Block {
 // Save will save the block.
 // Save the latest height and the blockhash
 func (b *Block) Save(utilsdb, heightdb, blockdb *leveldb.DB) error {
+	spew.Dump("prev hash", b.PrevHash)
 	// Get the previous block height
 	height, err := utilsdb.Get([]byte("chain_height"), nil)
 	var newHeight []byte

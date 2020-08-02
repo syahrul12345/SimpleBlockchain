@@ -1,11 +1,6 @@
 package database
 
 import (
-	"encoding/hex"
-	"encoding/json"
-	"log"
-	"simpleblockchain/blocks"
-
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -46,13 +41,7 @@ func GetHeightDB() *leveldb.DB {
 }
 
 // GetBlockByHeight returns the block based on height. Height has to be a hexadecimal string
-func GetBlockByHeight(heightdb *leveldb.DB, blocksdb *leveldb.DB, height string) (*blocks.Block, error) {
-	// Parse the hexadecimal string into bytes
-	heightHex, err := hex.DecodeString(height)
-	log.Println(heightHex)
-	if err != nil {
-		return nil, err
-	}
+func GetBlockByHeight(heightdb *leveldb.DB, blocksdb *leveldb.DB, heightHex []byte) ([]byte, error) {
 	// Get the hash by height
 	hash, err := heightdb.Get(heightHex, nil)
 	if err != nil {
@@ -63,24 +52,15 @@ func GetBlockByHeight(heightdb *leveldb.DB, blocksdb *leveldb.DB, height string)
 	if err != nil {
 		return nil, err
 	}
-	block := &blocks.Block{}
-	json.Unmarshal(blockSerializedBytes, block)
-	return block, nil
+	return blockSerializedBytes, nil
 }
 
 // GetBlockByHash returns the block based on the hash.
-func GetBlockByHash(blocksdb *leveldb.DB, hash string) (*blocks.Block, error) {
-	// Decode the hash to the correct bytes
-	hashBytes, err := hex.DecodeString(hash)
-	if err != nil {
-		return nil, err
-	}
+func GetBlockByHash(blocksdb *leveldb.DB, hashBytes []byte) ([]byte, error) {
 	// Using the hash as key, we can get the block
 	blockSerializedBytes, err := blocksdb.Get(hashBytes, nil)
 	if err != nil {
 		return nil, err
 	}
-	block := &blocks.Block{}
-	json.Unmarshal(blockSerializedBytes, block)
-	return block, nil
+	return blockSerializedBytes, nil
 }
