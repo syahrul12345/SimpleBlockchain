@@ -2,6 +2,7 @@ package main
 
 import (
 	"simpleblockchain/database"
+	"simpleblockchain/p2p"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,9 +24,9 @@ func main() {
 	// 	panic(err)
 	// }
 	// spew.Dump(block2)
-	// go p2p.StartServer()
-	// go p2p.StartClient()
-	// StartWebServer()
+	go p2p.StartServer()
+	go p2p.StartClient()
+	StartWebServer()
 }
 
 //StartWebServer : Starts Start the webserver
